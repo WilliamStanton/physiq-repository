@@ -1,0 +1,163 @@
+{% extends 'dashboard/partials/base.html' %}
+{% load static %}
+
+{% block view_actions %}
+<button class="btn btn-gradient btn-sm" data-bs-toggle="modal" data-bs-target="#modifyPlanModal">
+  <i class="bi bi-pencil-square me-1"></i> Modify Plan
+</button>
+{% endblock %}
+
+{% block view_content %}
+<div class="text-light">
+
+  <p class="mb-4 opacity-75">Here’s your personalized weekly workout schedule and suggested times.</p>
+
+  <div class="row g-2">
+    {% for day in plan.week_plan %}
+    <div class="col {% if forloop.last %}col-12{% else %}col-12 col-md-6{% endif %}">
+
+      <div
+        class="day-card workout-day-card"
+        data-bs-toggle="collapse"
+        data-bs-target="#workout-{{ forloop.counter }}"
+        aria-expanded="false"
+        aria-controls="workout-{{ forloop.counter }}"
+        role="button"
+      >
+
+        <div class="d-flex align-items-center gap-3">
+
+          {% if day.session_type == "Rest" %}
+            <img src="{% static 'img/icons/rest.png' %}" class="day-icon">
+          {% elif day.focus == "Push" %}
+            <img src="{% static 'img/icons/bench.png' %}" class="day-icon">
+          {% elif day.focus == "Pull" %}
+            <img src="{% static 'img/icons/curl.png' %}" class="day-icon">
+          {% elif day.focus == "Legs" %}
+            <img src="{% static 'img/icons/legs.png' %}" class="day-icon">
+          {% elif day.focus == "Cardio" %}
+            <img src="{% static 'img/icons/cardio.png' %}" class="day-icon">
+          {% else %}
+            <img src="{% static 'img/icons/pilate.png' %}" class="day-icon">
+          {% endif %}
+
+        <div class="d-flex flex-column">
+          <div class="day-header-line d-flex align-items-center gap-2 flex-wrap">
+            <span class="day-name">{{ day.day }}</span>
+            {% if day.recommended_time %}
+              <span class="badge bg-transparent text-info border border-info small">
+                {{ day.recommended_time }}
+              </span>
+            {% endif %}
+          </div>
+
+          {% if day.session_type == "Rest" %}
+            <span class="small opacity-75">Rest / Recovery</span>
+          {% else %}
+            <span class="small opacity-75">{{ day.focus }} Day</span>
+          {% endif %}
+        </div>
+
+        </div>
+
+        <i class="bi bi-chevron-right arrow-icon"></i>
+      </div>
+
+      <div id="workout-{{ forloop.counter }}" class="collapse mt-2">
+        <div class="workout-detail p-3 rounded-3">
+       {% if day.notes %}
+        <div class="mb-3">
+                <span class="small opacity-50" style="max-height: 2.5ch; overflow: hidden;">
+          {{ day.notes }}
+        </span>
+        </div>
+      {% endif %}
+
+          {% if day.session_type != "Rest" %}
+          <ul class="exercise-list p-0 m-0">
+            {% for ex in day.exercises %}
+            <li class="exercise-item">
+              <div class="exercise-name">{{ ex.name }}</div>
+
+              <div class="exercise-meta small opacity-75">
+                {% if ex.sets and ex.reps %}{{ ex.sets }} × {{ ex.reps }} reps{% endif %}
+                {% if ex.distance_m %} • {{ ex.distance_m }}m{% endif %}
+              </div>
+
+              {% if ex.notes %}
+              <div class="exercise-notes small fst-italic opacity-50">{{ ex.notes }}</div>
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <div class="rest-card text-center py-2">
+            <strong>Rest Day — Hydrate, stretch, and recover.</strong>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+<!-- 🧠 Regeneration prompt bubbles for Modify Plan -->
+<div id="regeneration-prompts" class="bubble-container mt-4">
+  <p><strong>Need suggestions?</strong></p>
+  <div class="bubbles">
+    <span class="bubble-prompt">Make it beginner-friendly</span>
+    <span class="bubble-prompt">Add more core workouts</span>
+    <span class="bubble-prompt">Replace running with low-impact cardio</span>
+    <span class="bubble-prompt">Shorten to 30 minutes a day</span>
+    <span class="bubble-prompt">Focus on strength training</span>
+  </div>
+</div>
+
+<style>
+.day-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,229,255,0.18);
+  transition: .25s;
+  cursor: pointer;
+  border-radius: .75rem;
+  padding: .9rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.day-card:hover { background: rgba(0,229,255,0.10); border-color: rgba(0,229,255,0.45); }
+
+.day-icon { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(0,229,255,0.65)); }
+
+.day-name { font-size: 1rem; font-weight: 600; }
+.arrow-icon { font-size: 1.2rem; transition: .25s; opacity: .75; }
+.workout-day-card[aria-expanded="true"] .arrow-icon { transform: rotate(90deg); opacity: 1; color: #00eaff; }
+
+.workout-detail { background: rgba(255,255,255,0.05); border: 1px solid rgba(0,229,255,0.22); backdrop-filter: blur(8px); }
+.exercise-list { list-style: none; }
+.exercise-item { padding-left: 12px; border-left: 2px solid rgba(0,229,255,0.6); margin-bottom: 8px; }
+.exercise-name { font-weight: 600; }
+.rest-card { background: rgba(0,229,255,0.12); border-left: 3px solid rgba(0,229,255,0.8); border-radius: .5rem; }
+
+/* Bubble styling */
+.bubble-container { padding: 10px; }
+.bubbles { display: flex; flex-wrap: wrap; gap: 10px; }
+.bubble-prompt {
+  background-color: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.bubble-prompt:hover {
+  background-color: rgba(79, 145, 248, 0.3);
+  transform: translateY(-2px);
+}
+</style>
+
+{% endblock %}

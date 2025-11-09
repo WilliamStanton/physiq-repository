@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card glass-card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4" data-bs-theme="dark">
+          <h2 class="text-center mb-3 fw-bold">Your Profile</h2>
+          <p class="text-center mb-4 text-light">
+            Help PhysIQ understand your goals and preferences.<br>
+            <span class="fw-semibold">This optimizes your AI workout and meal plans.</span>
+          </p>
+
+          <hr class="my-4" />
+
+
+          <form method="post" id="profile-form">
+            {% csrf_token %}
+
+            <!-- STEP 1 -->
+            <div class="step" data-step="1">
+              <h4 class="mb-3">Basic Details</h4>
+              {{ form.age.label_tag }} {{ form.age }}
+              {{ form.height.label_tag }} {{ form.height }}
+              {{ form.weight.label_tag }} {{ form.weight }}
+              {{ form.gender.label_tag }} {{ form.gender }}
+
+              <button type="button" class="btn btn-primary w-100 mt-3 next-step">
+                Next →
+              </button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step d-none" data-step="2">
+              <h4 class="mb-0">Your Fitness Goal</h4>
+              <p class="text-light small mb-3">
+                Choose the primary result you're aiming for.
+              </p>
+
+              <div class="d-flex justify-content-between mt-3 mb-4 goal-options">
+                {% for subwidget in form.fitness_goal %}
+                {% with val=subwidget.data.value %}
+                <label class="goal-card text-center" data-value="{{ val }}">
+                  {{ subwidget.tag }}
+                  {% if val == "gain_muscle" %}
+                  <img src="{% static 'img/icons/curl.png' %}" class="goal-icon mb-2" alt="">
+                  <div class="goal-label">Gain Muscle</div>
+                  {% elif val == "lose_weight" %}
+                  <img src="{% static 'img/icons/cardio.png' %}" class="goal-icon mb-2" alt="">
+                  <div class="goal-label">Lose Weight</div>
+                  {% else %}
+                  <img src="{% static 'img/icons/flex.png' %}" class="goal-icon mb-2" alt="">
+                  <div class="goal-label">Maintain Shape</div>
+                  {% endif %}
+                </label>
+                {% endwith %}
+                {% endfor %}
+              </div>
+
+              <div class="d-flex mt-3">
+                <button type="button" class="btn btn-secondary me-2 prev-step">← Back</button>
+                <button type="button" class="btn btn-primary next-step">Next →</button>
+              </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step d-none" data-step="3">
+              <h4 class="mb-3">Lifestyle & Preferences</h4>
+              {{ form.activity_level.label_tag }} {{ form.activity_level }}
+              {{ form.dietary_preferences.label_tag }} {{ form.dietary_preferences }}
+              {{ form.allergies.label_tag }} {{ form.allergies }}
+              {{ form.budget.label_tag }} {{ form.budget }}
+
+              <div class="d-flex mt-3">
+                <button type="button" class="btn btn-secondary me-2 prev-step w-25">← Back</button>
+                <button type="button" class="btn btn-primary next-step w-75">Next →</button>
+              </div>
+            </div>
+
+            <!-- STEP 4: Schedule -->
+            <div class="step d-none" data-step="4">
+              <h4 class="mb-0">School / Work Schedule</h4>
+              <p class="text-light small mb-3">
+                Click the blocks where you're busy, and PhysIQ will plan around these times.
+              </p>
+
+              <div id="schedule-grid" class="schedule-grid mb-3"></div>
+              {{ form.schedule }}
+
+              <div class="d-flex mt-3">
+                <button type="button" class="btn btn-secondary me-2 prev-step w-25">← Back</button>
+                <button type="submit" class="btn btn-primary w-75">Finish Setup!</button>
+              </div>
+            </div>
+          </form>
+
+          <hr class="my-4" />
+          <div class="text-center small text-light">
+            🔒 Your information is private and used only to personalize your AI fitness experience.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.goal-card {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 14px;
+  border-radius: 12px;
+  width: 32%;
+  transition: 0.25s;
+  border: 2px solid transparent;
+  position: relative;
+}
+.goal-card:hover {
+  border-color: #0d6efd;
+}
+.goal-card.selected {
+  border-color: #0d6efd;
+  filter: brightness(1.15);
+}
+.goal-card input[type="radio"] {
+  display: none;
+}
+.goal-icon {
+  width: 48px;
+  height: 48px;
+}
+
+/* --- Schedule Grid --- */
+.schedule-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(6, 1fr);
+  gap: 4px;
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.schedule-grid .day-label {
+  font-weight: 600;
+  text-align: right;
+  padding-right: 6px;
+  line-height: 32px;
+}
+
+.time-slot {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  height: 32px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s;
+}
+.time-slot:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.time-slot.busy {
+  background: #b21111;
+}
+
+.time-header {
+  text-align: center;
+  font-weight: 600;
+  line-height: 32px;
+  color: rgba(255,255,255,0.8);
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static '/js/profile.js' %}" defer></script>
+{% endblock %}

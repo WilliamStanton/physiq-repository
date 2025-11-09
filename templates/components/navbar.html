@@ -1,0 +1,29 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm border-bottom border-primary sticky-top"
+     style="backdrop-filter: blur(10px); background: rgba(20,20,20,0.9);">
+    <div class="container py-2">
+        <a class="navbar-brand fw-bold fs-3 text-gradient" href="/" style="letter-spacing: 1px;">
+            <img src="{% static 'img/logo.png' %}" alt="logo" width="150">
+        </a>
+
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/dashboard/">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/profile/">Profile</a></li>
+                </ul>
+                <a href="/logout/" class="btn btn-outline-danger px-3">Logout</a>
+            {% else %}
+                <ul class="navbar-nav mb-2 me-4 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/auth/">Login</a></li>
+                </ul>
+                <a href="/auth?register=true" class="btn btn-primary ml-2 px-3">Get Started</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

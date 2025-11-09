@@ -1,0 +1,118 @@
+{% extends 'dashboard/partials/base.html' %}
+{% load static %}
+
+{% block view_content %}
+<div class="text-light">
+
+  <!-- Header Banner -->
+  <div class="coach-banner d-flex align-items-center justify-content-between p-3 p-md-4 rounded-4 mb-4" data-bs-theme="dark">
+    <div class="d-flex align-items-center gap-3">
+      <div class="coach-icon d-flex align-items-center justify-content-center rounded-3">
+        <img src="{% static 'img/icons/selfie.png' %}" alt="Locker" class="coach-img" height="50px">
+      </div>
+      <div>
+        <div class="coach-date small text-uppercase opacity-75">My Progress</div>
+        <div class="coach-text fw-semibold">Your private space to watch your PhysIQ transform.</div>
+      </div>
+    </div>
+    <a href="#" class="btn btn-outline-light rounded-pill btn-sm" onclick="goToTab('community-feed')">
+      View Community Feed
+    </a>
+  </div>
+
+  <!-- Upload Form Card -->
+  <div class="overview-card rounded-4 p-3 p-md-4 mb-4" data-bs-theme="dark">
+    <form method="POST" action="{% url 'photo_locker' %}" enctype="multipart/form-data" class="row g-3 align-items-end">
+      {% csrf_token %}
+      <div class="col-12 col-md-4">
+        <label class="form-label small text-uppercase opacity-75">Upload Photo</label>
+        <input type="file" name="image" accept="image/*" class="form-control bg-transparent text-light border-light-subtle" required>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label small text-uppercase opacity-75">Caption</label>
+        <input type="text" name="note" class="form-control bg-transparent text-light border-light-subtle" placeholder="E.g. Week 4 progress">
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label small text-uppercase opacity-75">Visibility</label>
+        <select name="visibility" class="form-select bg-transparent text-light border-light-subtle" >
+          <option value="private" class="text-dark">Private</option>
+          <option value="public" class="text-dark">Public</option>
+        </select>
+      </div>
+      <div class="col-6 col-md-2 text-md-end">
+        <button type="submit" class="btn btn-primary rounded-pill w-100 w-md-auto px-4">Upload</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Photo Grid -->
+  {% if photos %}
+  <div class="photo-grid row g-3 g-md-4">
+    {% for photo in photos %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="photo-card position-relative rounded-4 overflow-hidden h-100" style="cursor: pointer;">
+        <img src="{{ photo.image.url }}" alt="User Photo" class="photo-img">
+        <div class="photo-overlay d-flex flex-column justify-content-end p-2">
+          <div class="small text-light opacity-75 text-center">
+            {{ photo.visibility|capfirst }}{% if photo.note %} • {{ photo.note }}{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center opacity-75 mt-5">📸 No photos yet, start tracking your progress!</div>
+  {% endif %}
+</div>
+
+<style>
+/* Banner (inherits dashboard style) */
+.coach-banner {
+  background: linear-gradient(135deg, rgba(0,229,255,0.18), rgba(0,153,255,0.14));
+  border: 1px solid rgba(0,229,255,0.35);
+}
+
+/* Upload card */
+.overview-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,229,255,0.18);
+  transition: 0.3s;
+}
+.overview-card:hover {
+  background: rgba(0,229,255,0.10);
+  border-color: rgba(0,229,255,0.45);
+}
+
+/* Photo grid */
+.photo-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,229,255,0.18);
+  aspect-ratio: 1 / 1;
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.photo-card:hover {
+  transform: translateY(-3px) scale(1.03);
+  border-color: rgba(0,229,255,0.45);
+  box-shadow: 0 0 15px rgba(0,229,255,0.3);
+}
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
+}
+
+/* Overlay for text at bottom */
+.photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+  text-align: center;
+  padding-top: 40%;
+}
+</style>
+{% endblock %}

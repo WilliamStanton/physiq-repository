@@ -1,0 +1,30 @@
+{% extends 'dashboard/partials/base.html' %}
+{% load static %}
+
+{% block view_content %}
+
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+
+<div id="chat-container">
+    <div id="chat-window">
+        {% for msg in chat_history %}
+            <div class="bubble user">{{ msg.message }}</div>
+            <div class="bubble ai parsed-message">{{ msg.response }}</div>
+        {% endfor %}
+    </div>
+
+    <div id="chat-input-area">
+        <textarea id="chat-input" placeholder="Ask PhysIQ anything..."></textarea>
+        <button id="send-btn">Send</button>
+    </div>
+</div>
+
+<div id="quick-prompts">
+    {% for prompt in prompt_suggestions %}
+    <button class="prompt-bubble" data-prompt="{{ prompt }}">
+        {{ prompt }}
+    </button>
+    {% endfor %}
+</div>
+
+{% endblock %}

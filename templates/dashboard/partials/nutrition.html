@@ -1,0 +1,150 @@
+{% extends 'dashboard/partials/base.html' %}
+{% load static %}
+
+{% block view_name %}
+    Nutrition Planner
+{% endblock %}
+
+{% block view_actions %}
+    <button id="generate-mealplan-btn" class="btn btn-gradient btn-sm">
+        <i class="bi bi-arrow-repeat me-1"></i> Regenerate Plan
+    </button>
+{% endblock %}
+
+{% block view_content %}
+    <div class="text-light">
+
+        <!-- Macro Target Row -->
+        <div class="target-row d-flex align-items-center gap-2 p-3 rounded-4 mb-4">
+            <img src="{% static 'img/icons/bench.png' %}" class="macro-icon" alt="icon" style="filter: drop-shadow(0 0 6px #00e5ffa6);">
+
+            <div class="d-flex flex-wrap gap-4 flex-grow-1 justify-content-around text-center">
+                <div class="stat">
+                    <div class="label">Calories</div>
+                    <div class="value">{{ plan.daily_targets.calorie_target }}</div>
+                    <div class="unit">kcal/day</div>
+                </div>
+
+                <div class="stat">
+                    <div class="label">Protein</div>
+                    <div class="value">{{ plan.daily_targets.protein_g }}</div>
+                    <div class="unit">g/day</div>
+                </div>
+
+                <div class="stat">
+                    <div class="label">Carbs</div>
+                    <div class="value">{{ plan.daily_targets.carbs_g }}</div>
+                    <div class="unit">g/day</div>
+                </div>
+
+                <div class="stat">
+                    <div class="label">Fat</div>
+                    <div class="value">{{ plan.daily_targets.fat_g }}</div>
+                    <div class="unit">g/day</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Week Overview: Compact Cards -->
+        <div class="row g-2">
+            {% for day in plan.week_plan %}
+                <div class="col {% if forloop.last %}col-12{% else %}col-12 col-md-6{% endif %}">
+                    <div
+                            class="day-card d-flex justify-content-between align-items-center p-3 rounded-3"
+                            role="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#mealModal"
+                            data-day="{{ day.day }}"
+                            data-calories="{{ day.day_total_calories }}"
+                            data-meals-id="meals-{{ forloop.counter }}"
+                            data-notes="{{ day.notes|escapejs }}"
+                    >
+
+                        <div class="d-flex flex-column">
+                            <span class="day-name fw-semibold">{{ day.day }}</span>
+                            <span class="opacity-75 small">{{ day.day_total_calories }} kcal</span>
+                        </div>
+
+                        <i class="bi bi-chevron-right arrow-icon"></i>
+
+                    </div>
+
+                    <script type="application/json" id="meals-{{ forloop.counter }}">
+      {{ day.meals_json|safe }}
+    </script>
+                </div>
+            {% endfor %}
+        </div>
+
+
+        <!-- Encouragement Message -->
+        <div class="coach-message p-3 mt-4 mb-4 rounded-4 text-center">
+            {{ plan.encouragement_message }}
+        </div>
+
+    </div>
+
+    <style>
+        .coach-message {
+            background: rgba(0, 229, 255, 0.10);
+            border-left: 3px solid rgba(0, 229, 255, 0.6);
+            font-style: italic;
+        }
+
+        .target-row {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.18), rgba(0, 116, 255, 0.18));
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .macro-icon {
+            width: 65px
+        }
+
+        .stat .label {
+            font-size: .7rem;
+            opacity: .75;
+            text-transform: uppercase;
+        }
+
+        .stat .value {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .stat .unit {
+            font-size: .75rem;
+            opacity: .6;
+        }
+
+        .day-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(0, 229, 255, 0.14);
+            transition: .2s;
+            cursor: pointer;
+        }
+
+        .day-card:hover {
+            background: rgba(0, 229, 255, 0.09);
+            border-color: rgba(0, 229, 255, 0.35);
+        }
+
+        .arrow-icon {
+            font-size: 1.2rem;
+            opacity: .85;
+            transition: .2s;
+        }
+
+        .day-card:hover .arrow-icon {
+            color: #00eaff;
+            transform: translateX(3px);
+        }
+
+        .weekly-summary {
+            background: rgba(0, 116, 255, 0.12);
+            border: 1px solid rgba(0, 116, 255, 0.25);
+            backdrop-filter: blur(6px);
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,16 @@
+<div class="dashboard-view fade-in">
+    <div class="view-header d-flex justify-content-between align-items-center mb-4" style="border-bottom: 1px solid rgba(255, 255, 255, 0.53); padding-bottom: 8px;">
+        <h4 class="view-title fw-bold text-light mb-0">{{ view_name|title }}</h4>
+
+        <div class="view-actions">
+            {% block view_actions %}{% endblock %}
+        </div>
+    </div>
+
+    <div class="view-content">
+        {% block view_content %}
+        <!-- Specific view content goes here -->
+        {% endblock %}
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</div>

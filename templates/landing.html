@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="landing-container position-relative text-center text-light rounded mb-5">
+  <div class="overlay"></div>
+  <div class="container py-5 position-relative z-2">
+    <img src="{% static 'img/logo.png' %}" alt="logo" width="200">
+    <p class="lead fw-light animate-fadein">AI Fitness that fits your life.</p>
+    <p class="mb-4 text-light fw-light animate-fadein delay-1">
+      Workouts, meals, and schedules built around classes, work, and real-life.
+      <br>No more planning — AI does the thinking for you.
+    </p>
+    <a href="/auth?register=true" class="btn btn-lg btn-primary fw-semibold glow-btn animate-fadein delay-2">
+      Get Started - Free Forever!
+    </a>
+  </div>
+</section>
+
+<!-- FEATURE CARDS -->
+<section class="container text-center py-5">
+  <h2 class="mb-4 fw-semibold text-gradient">Made For Busy People</h2>
+  <div class="row g-4">
+    <!-- Card 1 -->
+    <div class="col-md-4">
+      <div class="glass-card text-light border-0 shadow h-100 feature-card">
+        <div class="card-body">
+          <div class="icon-circle mb-3 mx-auto">
+            <img src="{% static 'img/icons/weights2.png' %}" alt="Workout Icon" class="feature-icon">
+          </div>
+          <h5 class="card-title fw-semibold">AI Workout Builder</h5>
+          <p class="card-text text-light opacity-75">
+            Efficient workouts designed around your schedule — no overthinking required.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="col-md-4">
+      <div class="glass-card text-light border-0 shadow h-100 feature-card">
+        <div class="card-body">
+          <div class="icon-circle mb-3 mx-auto">
+            <img src="{% static 'img/icons/bench.png' %}" alt="Nutrition Icon" class="feature-icon">
+          </div>
+          <h5 class="card-title fw-semibold">AI Meal Planner</h5>
+          <p class="card-text text-light opacity-75">
+            Healthy, budget-friendly meals based on your preferences and goals.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col-md-4">
+      <div class="glass-card text-light border-0 shadow h-100 feature-card">
+        <div class="card-body">
+          <div class="icon-circle mb-3 mx-auto">
+            <img src="{% static 'img/icons/robot.png' %}" alt="CoachBot Icon" class="feature-icon">
+          </div>
+          <h5 class="card-title fw-semibold">CoachBot Assistant</h5>
+          <p class="card-text text-light opacity-75">
+            Your personal AI coach. Stay motivated, and get instant answers.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="border-secondary my-5">
+
+<!-- HOW IT WORKS -->
+<section class="container text-center py-5">
+  <h2 class="fw-semibold mb-4 text-gradient">How It Works</h2>
+  <div class="row g-4">
+    <div class="col-md-3">
+      <img src="{% static 'img/icons/checklist.png' %}" alt="Schedule Icon" class="how-icon">
+      <h6 class="fw-bold mt-2">1. Set Your Schedule</h6>
+      <p class="text-light opacity-75 small">Tell us your classes, study times, and free hours.</p>
+    </div>
+    <div class="col-md-3">
+      <img src="{% static 'img/icons/robot.png' %}" alt="AI Icon" class="how-icon">
+      <h6 class="fw-bold mt-2">2. AI Generates Your Plan</h6>
+      <p class="text-light opacity-75 small">Smart plans for workouts, meals, and rest days — built around you.</p>
+    </div>
+    <div class="col-md-3">
+      <img src="{% static 'img/icons/heart.png' %}" alt="Consistency Icon" class="how-icon">
+      <h6 class="fw-bold mt-2">3. Stay Consistent</h6>
+      <p class="text-light opacity-75 small">Your plan adapts automatically when life gets busy.</p>
+    </div>
+    <div class="col-md-3">
+      <img src="{% static 'img/icons/flex.png' %}" alt="Support Icon" class="how-icon">
+      <h6 class="fw-bold mt-2">4. Chat with CoachBot</h6>
+      <p class="text-light opacity-75 small">Ask questions or get motivation anytime.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="border-secondary my-5">
+
+<!-- SOCIAL / PROGRESS SECTION -->
+<section class="container text-center py-5">
+  <h2 class="fw-semibold mb-3 text-gradient">Track & Share Your PhysIQ Journey</h2>
+  <p class="text-light opacity-75 mb-5 mx-auto" style="max-width: 700px;">
+    Stay consistent, stay inspired. Capture your transformation privately or share it with the PhysIQ community.
+  </p>
+
+  <div class="row g-4 justify-content-center">
+    <!-- Photo Locker -->
+    <div class="col-md-5">
+      <div class="glass-card text-light border-0 shadow h-100 p-4">
+        <div class="icon-circle mb-3 mx-auto">
+          <img src="{% static 'img/icons/selfie.png' %}" alt="Locker Icon" class="feature-icon">
+        </div>
+        <h5 class="fw-bold mb-2">Photo Locker</h5>
+        <p class="opacity-75 mb-0">Your private space to watch your PhysIQ transform.</p>
+      </div>
+    </div>
+
+    <!-- Community Feed -->
+    <div class="col-md-5">
+      <div class="glass-card text-light border-0 shadow h-100 p-4">
+        <div class="icon-circle mb-3 mx-auto">
+          <img src="{% static 'img/icons/flex.png' %}" alt="Community Icon" class="feature-icon">
+        </div>
+        <h5 class="fw-bold mb-2">Community Feed</h5>
+        <p class="opacity-75 mb-0">Share your PhysIQ with the world.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="border-secondary my-5">
+
+<!-- HACKATHON / SPONSORS SECTION -->
+<section class="container text-center py-5 sponsor-section text-light">
+  <h3 class="fw-bold mb-2 text-gradient">Built for Students, by Students</h3>
+  <p class="text-light opacity-75 mb-4">
+    Built for <a href="https://hack.sbcs.io/" target="_blank" class="text-info fw-semibold text-decoration-none">
+      SBUHacks Hackathon
+    </a> and powered by our amazing sponsors.
+  </p>
+
+  <div class="d-flex flex-wrap justify-content-center align-items-center gap-5 sponsor-logos">
+    <a href="https://www.vultr.com" target="_blank" class="sponsor-link">
+      <img src="https://images.g2crowd.com/uploads/product/image/387c3dfdb21c2883f61e09e50a9e2ddf/vultr.png" alt="Vultr" class="sponsor-logo">
+    </a>
+    <a href="https://azure.microsoft.com" target="_blank" class="sponsor-link">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Microsoft_Azure_Logo.svg/1280px-Microsoft_Azure_Logo.svg.png" alt="Azure" class="sponsor-logo">
+    </a>
+    <a href="https://openai.com" target="_blank" class="sponsor-link">
+      <img src="https://miro.medium.com/0*-xch1nUQ8haaWebF.png" alt="OpenAI" class="sponsor-logo">
+    </a>
+    <a href="https://mlh.io" target="_blank" class="sponsor-link">
+      <img src="https://static.mlh.io/brand-assets/logo/official/mlh-logo-color.png" alt="Major League Hacking" class="sponsor-logo">
+    </a>
+  </div>
+</section>
+
+<hr class="border-secondary my-5">
+
+<!-- CALL TO ACTION -->
+<section class="text-center py-5 mt-5 bg-dark text-light rounded cta-section">
+  <div class="container">
+    <h2 class="fw-bold mb-3 text-gradient">Stay Healthy While Earning Your Degree</h2>
+    <p class="mb-4">Let PhysIQ provide you the consistency that works with your life.</p>
+    <a href="/auth?register=true" class="btn btn-lg fw-bold btn-primary glow-btn">Get Started - Free Forever!</a>
+  </div>
+</section>
+{% endblock %}

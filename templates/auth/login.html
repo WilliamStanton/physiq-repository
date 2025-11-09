@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center text-light" style="min-height: 72vh;">
+    <div class="card glass-card p-4 p-md-5 rounded shadow-lg text-center" data-bs-theme="dark" style="max-width: 420px; width: 100%;">
+        <img src="{% static 'img/logo.png' %}" alt="logo">
+
+        <!-- ✅ Updated heading with ID -->
+        <h2 id="auth-title" class="fw-medium text-primary mb-3 text-gradient">Welcome back!</h2>
+
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} py-2 mb-3">{{ message }}</div>
+        {% endfor %}
+
+        <ul class="nav nav-tabs justify-content-center mb-4 border-0">
+            <li class="nav-item">
+                <button class="nav-link active text-light bg-primary bg-gradient border-0 m-1" id="login-tab">Login</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link text-light border-0 m-1" id="register-tab">Register</button>
+            </li>
+        </ul>
+
+        <!-- Login Form -->
+        <form id="loginForm" method="post" action="" class="text-start">
+            {% csrf_token %}
+            {{ login_form.non_field_errors }}
+            {{ login_form.as_p }}
+            <button type="submit" name="login_submit" class="btn btn-primary w-100 fw-semibold">Login</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" method="post" action="" class="text-start" style="display:none;">
+            {% csrf_token %}
+            {{ register_form.non_field_errors }}
+            {{ register_form.as_p }}
+            <button type="submit" name="register_submit" class="btn btn-primary w-100 fw-semibold">Create Account</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const loginBtn = document.getElementById('login-tab');
+    const registerBtn = document.getElementById('register-tab');
+
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const title = document.getElementById('auth-title');
+
+    function showRegister() {
+        registerBtn.classList.add('active', 'bg-primary', 'bg-gradient');
+        loginBtn.classList.remove('active', 'bg-primary', 'bg-gradient');
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        title.textContent = "Create Your Account"; // ✅ Update title when registering
+    }
+
+    function showLogin() {
+        loginBtn.classList.add('active', 'bg-primary', 'bg-gradient');
+        registerBtn.classList.remove('active', 'bg-primary', 'bg-gradient');
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        title.textContent = "Welcome Back!"; // ✅ Reset title when logging in
+    }
+
+    registerBtn.addEventListener('click', showRegister);
+    loginBtn.addEventListener('click', showLogin);
+
+    // ✅ Auto-switch tabs via URL params
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('register') || params.get('tab') === 'register') {
+        showRegister();
+    }
+
+    // ✅ Optional: auto-switch if register form errors exist
+    {% if register_form.errors %}
+    showRegister();
+    {% endif %}
+</script>
+
+{% endblock %}

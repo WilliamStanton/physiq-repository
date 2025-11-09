@@ -1,0 +1,14 @@
+# Core framework
+Django>=5.0,<6.0
+
+# AI integration
+openai>=1.40.0
+
+# Environment variables
+python-dotenv>=1.0.1
+
+# Image handling (for user photo uploads)
+Pillow>=10.0.0
+
+# Optional but recommended: for secure requests and production deployments
+requests>=2.32.0

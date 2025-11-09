@@ -1,0 +1,241 @@
+{% extends 'dashboard/partials/base.html' %}
+{% load static %}
+
+{% block view_actions %}
+    <!-- New Community Activity Button -->
+    {% if new_posts_today > 0 %}
+      <button id="new-community-btn" class="btn btn-sm"
+              onclick="goToTab('community-feed')">
+        <i class="bi bi-people-fill me-1"></i>
+        {{ new_posts_today }} new community post{{ new_posts_today|pluralize }} today, check it out!
+      </button>
+    {% endif %}
+{% endblock %}
+
+{% block view_content %}
+    <div class="text-light">
+
+        <!-- Coach Banner -->
+        <div class="coach-banner d-flex align-items-center justify-content-between p-3 p-md-4 rounded-4 mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="coach-icon d-flex align-items-center justify-content-center rounded-3">
+                    <img src="{% static 'img/icons/robot.png' %}" alt="Coach" class="coach-img">
+                </div>
+                <div>
+                    <div class="coach-date small text-uppercase opacity-75">{{ today_str }}</div>
+                    <div class="coach-text fw-semibold">{{ coach_banner }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 g-md-4">
+            <!-- Workout Today -->
+            <div class="col-12 col-lg-6">
+                <div class="overview-card rounded-4 p-2 p-md-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="{% static 'img/icons/weights2.png' %}" class="section-icon" alt="Workout">
+                            <h5 class="m-0 fw-bold">Today's Workout</h5>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-pill" onclick="goToTab('workout')">
+                            View Full Plan
+                        </a>
+                    </div>
+
+                    {% if workout_today %}
+                        <div class="mb-2 small opacity-75">
+                            {{ workout_today.day }} •
+                            {% if workout_today.session_type == "Rest" %}
+                                Rest / Recovery
+                            {% else %}
+                                {{ workout_today.focus }} Day
+                            {% endif %}
+                        </div>
+
+                        {% if workout_today.session_type == "Rest" %}
+                            {% if workout_today.notes %}
+                                <div class="small opacity-75">{{ workout_today.notes }}</div>
+                            {% endif %}
+                        {% else %}
+                            <ul class="list-unstyled m-0">
+                                {% for ex in workout_today.exercises|slice:":5" %}
+                                    <li class="exercise-row d-flex justify-content-between align-items-start">
+                                        <div class="fw-semibold">{{ ex.name }}</div>
+                                        <div class="small opacity-75 ms-3 text-end">
+                                            {% if ex.sets and ex.reps %}{{ ex.sets }} × {{ ex.reps }} reps{% endif %}
+                                            {% if ex.distance_m %}{% if ex.sets and ex.reps %}
+                                                • {% endif %}{{ ex.distance_m }}m{% endif %}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {% if workout_today.notes %}
+                                <div class="small opacity-75 mt-2">{{ workout_today.notes }}</div>
+                            {% endif %}
+                        {% endif %}
+
+                    {% else %}
+                        <div class="small opacity-75">No workout plan found. Create or modify your plan in the Workout
+                            tab.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Nutrition Today -->
+            <div class="col-12 col-lg-6">
+                <!-- Entire card opens the existing Meal modal -->
+                    <div
+                        class="overview-card rounded-4 p-3 p-md-4 h-100 overview-nutrition-card"
+                        role="button"
+                        data-meals-id="overview-meals-json"
+                        data-day="{{ nutrition_today.day|default:'Today' }}"
+                        data-calories="{{ nutrition_today.day_total_calories|default:'0' }}"
+                        data-notes="{{ nutrition_today.notes|default:''|escapejs }}"
+                    >
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="{% static 'img/icons/bench.png' %}" class="section-icon" alt="Meals">
+                            <h5 class="m-0 fw-bold">Today's Meals</h5>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-pill overview-nutrition-link">
+                            View Full Plan
+                        </a>
+                    </div>
+
+                    {% if nutrition_today %}
+                        <div class="small opacity-75 mb-3">
+                            {{ nutrition_today.day }} • {{ nutrition_today.day_total_calories }} kcal
+                        </div>
+
+                        <!-- Quick meal summary -->
+                        <div class="meal-mini-list">
+                            {% for m in nutrition_today.meals|slice:":4" %}
+                                <div class="meal-mini d-flex justify-content-between">
+                                    <span class="fw-semibold">{{ m.name }}</span>
+                                    <span class="small opacity-75">{{ m.meal_total_calories }} kcal</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if daily_calorie_target or macro_targets %}
+                            <div class="targets-row d-flex flex-wrap gap-2 mb-2">
+                                {% if macro_targets %}
+                                    {% if macro_targets.protein_g %}
+                                        <span class="chip">Protein: {{ macro_targets.protein_g }}g</span>{% endif %}
+                                    {% if macro_targets.carbs_g %}
+                                        <span class="chip">Carbs: {{ macro_targets.carbs_g }}g</span>{% endif %}
+                                    {% if macro_targets.fat_g %}
+                                        <span class="chip">Fat: {{ macro_targets.fat_g }}g</span>{% endif %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Hidden JSON for the modal -->
+                        <script type="application/json" id="overview-meals-json">
+            {{ nutrition_meals_json|safe }}
+          </script>
+
+                    {% else %}
+                        <div class="small opacity-75">No nutrition plan found. Create or modify your plan in the
+                            Nutrition tab.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="overview-card rounded-4 p-3 p-md-4 mt-4 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <img src="{% static 'img/icons/checklist.png' %}" class="section-icon" alt="Info">
+                <div>
+                    <div class="fw-semibold">Don’t forget to update your profile</div>
+                    <div class="small opacity-75">
+                        Keeping your details current helps PhysIQ personalize your workouts and meals.
+                    </div>
+                </div>
+            </div>
+            <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-light rounded-pill">
+                Update Profile
+            </a>
+        </div>
+    </div>
+
+    <style>
+        /* --- Banner --- */
+        .coach-banner {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.18), rgba(0, 153, 255, 0.14));
+            border: 1px solid rgba(0, 229, 255, 0.35);
+        }
+
+        .coach-icon {
+            width: 44px;
+            height: 44px;
+        }
+
+        .coach-img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.65));
+        }
+
+        .coach-text {
+            font-size: 1.05rem;
+        }
+
+        /* --- Cards --- */
+        .overview-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 229, 255, 0.18);
+            transition: .25s;
+        }
+
+        .overview-card:hover {
+            background: rgba(0, 229, 255, 0.10);
+            border-color: rgba(0, 229, 255, 0.45);
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.65));
+        }
+
+        /* Workout rows */
+        .exercise-row {
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .exercise-row:last-child {
+            border-bottom: 0;
+        }
+
+        .rest-pill {
+            background: rgba(0, 229, 255, 0.12);
+            border-left: 3px solid rgba(0, 229, 255, 0.8);
+        }
+
+        /* Nutrition chips */
+        .chip {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            background: rgba(255, 255, 255, 0.04);
+            font-size: .85rem;
+        }
+
+        .meal-mini {
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .meal-mini:last-child {
+            border-bottom: 0;
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends 'dashboard/partials/base.html' %}
+
+
+{% load static %}
+
+{% block view_content %}
+    <link rel="stylesheet" href="{% static 'css/progress.css' %}">
+
+    <div class="text-light">
+
+        <!-- Streak Section -->
+        <div class="streaks-container mb-4">
+            <div class="row g-3">
+                <div class="col-12 col-md-4">
+                    <div class="streak-card">
+                        <div class="streak-icon">💪</div>
+                        <div class="streak-label">Workout Streak</div>
+                        <div class="streak-value">
+                            {{ streaks.workout_current }} <span class="streak-unit">days</span>
+                        </div>
+                        <div class="streak-best">Best: {{ streaks.workout_best }}</div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="streak-card">
+                        <div class="streak-icon">🥗</div>
+                        <div class="streak-label">Nutrition Streak</div>
+                        <div class="streak-value">
+                            {{ streaks.nutrition_current }} <span class="streak-unit">days</span>
+                        </div>
+                        <div class="streak-best">Best: {{ streaks.nutrition_best }}</div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="streak-card">
+                        <div class="streak-icon">🔥</div>
+                        <div class="streak-label">Overall Streak</div>
+                        <div class="streak-value">
+                            {{ streaks.overall_current }} <span class="streak-unit">days</span>
+                        </div>
+                        <div class="streak-best">Best: {{ streaks.overall_best }}</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- WEEK -->
+        <div class="week-container mb-4">
+            <h5 class="mb-3 fw-semibold">This Week</h5>
+
+            <div class="week-grid">
+                {% for day in week_data %}
+                    <div class="day-column {% if day.is_today %}day-today{% endif %}"
+                         data-date="{{ day.date|date:'Y-m-d' }}">
+
+                        <div class="day-header">
+                            <div class="day-name">{{ day.day_name }}</div>
+                            <div class="day-num">{{ day.day_num }}</div>
+                        </div>
+
+                        <div class="status-indicators">
+                            <!-- Workout Indicator -->
+                            <div class="workout-indicator" data-status="{{ day.workout_status }}">
+                                {% if day.workout_status == "done" %}
+                                    <i class="bi bi-check-circle-fill text-success status-icon"></i>
+                                {% elif day.workout_status == "rest" %}
+                                    <i class="bi bi-circle text-secondary status-icon"></i>
+                                {% else %}
+                                    <i class="bi bi-x-circle-fill text-danger status-icon"></i>
+                                {% endif %}
+                            </div>
+
+                            <!-- Nutrition Indicator -->
+                            <div class="nutrition-indicator" data-status="{{ day.nutrition_status }}">
+                                {% if day.nutrition_status == "hit" %}
+                                    <i class="bi bi-droplet-fill text-success status-icon"></i>
+                                {% elif day.nutrition_status == "none" %}
+                                    <i class="bi bi-circle text-secondary status-icon"></i>
+                                {% else %}
+                                    <i class="bi bi-droplet-half text-danger status-icon"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <button class="note-btn"
+                                data-date="{{ day.date|date:'Y-m-d' }}"
+                                data-notes="{{ day.notes|escapejs }}">
+                            {% if day.notes %}
+                                <i class="bi bi-pencil-square"></i>
+                            {% else %}
+                                <i class="bi-pencil-square"></i>
+                            {% endif %}
+                        </button>
+
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+            <!-- ---- PROGRESS LEGEND ---- -->
+        <div class="progress-key rounded-4 p-3 p-md-4">
+            <h5 class="mb-3 fw-semibold">Progress Legend</h5>
+
+            <div class="row row-cols-2 row-cols-md-3 g-3 text-center w-100">
+                <div class="col">
+                    <div class="key-item">
+                        <i class="bi bi-check-circle-fill text-success key-icon"></i>
+                        <span class="key-label">Workout Done</span>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="key-item">
+                        <i class="bi bi-circle text-secondary key-icon"></i>
+                        <span class="key-label">Rest / None</span>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="key-item">
+                        <i class="bi bi-x-circle-fill text-danger key-icon"></i>
+                        <span class="key-label">Workout Missed</span>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="key-item">
+                        <i class="bi bi-droplet-fill text-success key-icon"></i>
+                        <span class="key-label">Nutrition Hit</span>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="key-item">
+                        <i class="bi bi-droplet-half text-danger key-icon"></i>
+                        <span class="key-label">Nutrition Missed</span>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="key-item">
+                        <i class="bi bi-pencil-square text-info key-icon"></i>
+                        <span class="key-label">Add Notes</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 small text-center w-100">
+                <i class="bi bi-hand-index-thumb me-1"></i>
+                Click icons to update your workout or nutrition status.
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

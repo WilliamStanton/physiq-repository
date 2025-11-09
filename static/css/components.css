@@ -1,0 +1,48 @@
+/* Regular cards and inputs */
+.card:not(.glass-card),
+.form-control {
+  background-color: #2b2b2b !important;
+  color: #f5f5f5 !important;
+  border-color: #444 !important;
+}
+
+.card {
+  cursor: default;
+  background-color: transparent !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+              rgba(0, 0, 0, 0.12) 0px -12px 30px,
+              rgba(0, 0, 0, 0.12) 0px 4px 6px,
+              rgba(0, 0, 0, 0.17) 0px 12px 13px,
+              rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card .card-body i {
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-body i {
+  transform: scale(1.2);
+}
+
+/* Glassmorphism cards */
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-clip: border-box;
+  border: 1px solid rgba(198, 198, 198, 0.44) !important;
+  border-radius: 16px;
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  padding: 1rem;
+}
+
+.glass-card:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-3px);
+}

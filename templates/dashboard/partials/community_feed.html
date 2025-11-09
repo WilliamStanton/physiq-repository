@@ -1,0 +1,78 @@
+{% extends 'dashboard/partials/base.html' %}
+{% load static %}
+
+{% block view_content %}
+<div class="text-light">
+
+  <!-- Banner -->
+  <div class="coach-banner d-flex align-items-center justify-content-between p-3 p-md-4 rounded-4 mb-4">
+    <div class="d-flex align-items-center gap-3">
+      <div class="coach-icon d-flex align-items-center justify-content-center rounded-3">
+        <img src="{% static 'img/icons/selfie.png' %}" alt="Feed" class="coach-img" height="50">
+      </div>
+      <div>
+        <div class="coach-date small text-uppercase opacity-75">PhysIQ Community</div>
+        <div class="coach-text fw-semibold">Share your PhysIQ with the world.</div>
+      </div>
+    </div>
+    <a href="#" class="btn btn-outline-light rounded-pill btn-sm" onclick="goToTab('photo-locker')">
+      Add to Community Feed
+    </a>
+  </div>
+
+  <!-- Feed Grid -->
+  {% if posts %}
+  <div class="photo-grid row g-3 g-md-4">
+    {% for p in posts %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="photo-card rounded-4 overflow-hidden position-relative" style="cursor: pointer;">
+        <img src="{{ p.image.url }}" class="photo-img" alt="@{{ p.user.username }}'s photo">
+        <div class="photo-overlay d-flex flex-column justify-content-end p-2">
+          <div class="small text-light text-center">
+            <span class="fw-semibold">@{{ p.user.username }}</span>
+            {% if p.note %}<br><span class="opacity-75">{{ p.note }}</span>{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center opacity-75 mt-5">🌍 No public posts yet. Be the first to share your progress!</div>
+  {% endif %}
+</div>
+
+<style>
+.coach-banner {
+  background: linear-gradient(135deg, rgba(0,229,255,0.18), rgba(0,153,255,0.14));
+  border: 1px solid rgba(0,229,255,0.35);
+}
+
+.photo-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  transition: transform .25s, border-color .25s;
+  aspect-ratio: 1 / 1;
+}
+.photo-card:hover {
+  transform: scale(1.03);
+  border-color: rgba(0, 229, 255, 0.45);
+}
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
+}
+.photo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+  text-align: center;
+  padding-top: 40%;
+}
+</style>
+{% endblock %}
